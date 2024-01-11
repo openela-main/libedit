@@ -4,7 +4,7 @@
 Summary:	The NetBSD Editline library
 Name:		libedit
 Version:	3.1
-Release:	37.%{snap}cvs%{?dist}
+Release:	38.%{snap}cvs%{?dist}
 License:	BSD
 URL:		https://www.thrysoee.dk/editline/
 Source0:	https://www.thrysoee.dk/editline/%{name}-%{snap}-%{version}.tar.gz
@@ -12,6 +12,9 @@ BuildRequires:	gcc
 BuildRequires:	groff-base
 BuildRequires:	make
 BuildRequires:	ncurses-devel
+
+# Fix reading of $HOME/.editrc and $EDITRC
+Patch1:		libedit-editrc.patch
 
 %description
 Libedit is an autotool- and libtoolized port of the NetBSD Editline library.
@@ -28,7 +31,7 @@ Requires:	ncurses-devel%{?_isa}
 This package contains development files for %{name}.
 
 %prep
-%autosetup -n %{name}-%{dir_snap}-%{version}
+%autosetup -n %{name}-%{dir_snap}-%{version} -p1
 
 # Fix unused direct shared library dependencies.
 sed -i "s/lncurses/ltinfo/" configure
@@ -64,6 +67,9 @@ rm -f $RPM_BUILD_ROOT%{_mandir}/man3/history.3*
 %{_includedir}/editline/readline.h
 
 %changelog
+* Wed Jul 19 2023 Miroslav Lichvar <mlichvar@redhat.com> 3.1-38.20210216cvs
+- Fix reading of $HOME/.editrc and $EDITRC (#2211207)
+
 * Mon Aug 09 2021 Mohan Boddu <mboddu@redhat.com> - 3.1-37.20210216cvs
 - Rebuilt for IMA sigs, glibc 2.34, aarch64 flags
   Related: rhbz#1991688
